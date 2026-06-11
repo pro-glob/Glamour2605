@@ -1,0 +1,1017 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Glamour Coffee & Restaurant — May 2026</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700;900&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+/* ══════════════════════════════════════════
+   THEME VARIABLES
+   ══════════════════════════════════════════ */
+:root {
+  /* DARK (default) */
+  --bg:#0a0f1e; --surface:#111827; --surface2:#1a2235;
+  --border:#1e2d45; --text:#e2e8f0; --muted:#64748b;
+  --card-shadow:0 2px 12px rgba(0,0,0,0.4);
+  --accent:#8b5cf6; --accent2:#10b981; --danger:#ef4444; --warning:#f59e0b;
+  --chart-grid:rgba(255,255,255,0.04);
+  --chart-text:#64748b;
+  --tooltip-bg:#1a2235; --tooltip-border:#1e2d45;
+  --tooltip-title:#e2e8f0; --tooltip-body:#94a3b8;
+  --pl-total-bg:rgba(139,92,246,0.06); --pl-total-border:#8b5cf6;
+  --pl-net-bg:rgba(239,68,68,0.07); --pl-net-border:rgba(239,68,68,0.5);
+  --pl-hover:rgba(139,92,246,0.03);
+  --pl-hcol:rgba(139,92,246,0.04);
+  --insight-bg:var(--surface2);
+  --toggle-icon:"🌙";
+}
+body.light {
+  --bg:#f8f9fc; --surface:#ffffff; --surface2:#f1f4f9;
+  --border:#d1d9e6; --text:#1e293b; --muted:#64748b;
+  --card-shadow:0 1px 4px rgba(0,0,0,0.06);
+  --accent:#7c3aed; --accent2:#059669; --danger:#dc2626; --warning:#d97706;
+  --chart-grid:rgba(0,0,0,0.05);
+  --chart-text:#64748b;
+  --tooltip-bg:#ffffff; --tooltip-border:#d1d9e6;
+  --tooltip-title:#1e293b; --tooltip-body:#475569;
+  --pl-total-bg:#f5f3ff; --pl-total-border:#7c3aed;
+  --pl-net-bg:#fef2f2; --pl-net-border:#dc2626;
+  --pl-hover:#f8f9fc;
+  --pl-hcol:#f5f3ff;
+  --insight-bg:var(--surface2);
+  --toggle-icon:"☀️";
+}
+
+/* ══════════════════════════════════════════
+   BASE
+   ══════════════════════════════════════════ */
+*{box-sizing:border-box;margin:0;padding:0;}
+body{
+  font-family:'Cairo','Inter',sans-serif;
+  background:var(--bg); color:var(--text);
+  min-height:100vh; overflow-x:hidden;
+  transition:background 0.3s,color 0.3s;
+}
+body.ltr{direction:ltr;font-family:'Inter','Cairo',sans-serif;}
+body.rtl{direction:rtl;font-family:'Cairo','Inter',sans-serif;}
+
+/* BG animation — dark only */
+.bg-anim{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden;transition:opacity 0.3s;}
+body.light .bg-anim{opacity:0;pointer-events:none;}
+.bg-anim span{position:absolute;border-radius:50%;animation:float 12s infinite ease-in-out;}
+.bg-anim span:nth-child(1){width:500px;height:500px;top:-100px;right:-100px;background:radial-gradient(circle,rgba(139,92,246,0.08),transparent 70%);}
+.bg-anim span:nth-child(2){width:400px;height:400px;bottom:0;left:0;animation-delay:-4s;background:radial-gradient(circle,rgba(16,185,129,0.06),transparent 70%);}
+.bg-anim span:nth-child(3){width:300px;height:300px;top:50%;right:40%;animation-delay:-8s;background:radial-gradient(circle,rgba(139,92,246,0.05),transparent 70%);}
+@keyframes float{0%,100%{transform:translate(0,0) scale(1);}50%{transform:translate(20px,-20px) scale(1.05);}}
+
+.container{position:relative;z-index:1;max-width:1380px;margin:0 auto;padding:20px 16px;}
+
+/* ══════════════════════════════════════════
+   TOP BAR
+   ══════════════════════════════════════════ */
+.top-bar{
+  display:flex; justify-content:space-between; align-items:center;
+  margin-bottom:16px; flex-wrap:wrap; gap:8px;
+}
+.top-bar-left{display:flex;gap:8px;align-items:center;}
+.top-bar-right{display:flex;gap:8px;align-items:center;}
+
+/* Language buttons */
+.lang-btn{
+  background:var(--surface); border:1.5px solid var(--border);
+  color:var(--muted); padding:7px 16px; border-radius:20px;
+  cursor:pointer; font-size:0.82rem; font-family:inherit; transition:all 0.2s;
+}
+.lang-btn.active{background:var(--accent);border-color:var(--accent);color:#fff;font-weight:700;}
+.lang-btn:hover:not(.active){border-color:var(--accent);color:var(--accent);}
+
+/* Theme toggle */
+.theme-btn{
+  background:var(--surface); border:1.5px solid var(--border);
+  color:var(--muted); padding:7px 14px; border-radius:20px;
+  cursor:pointer; font-size:0.88rem; font-family:inherit;
+  transition:all 0.2s; white-space:nowrap;
+}
+.theme-btn:hover{border-color:var(--accent);color:var(--accent);}
+
+/* Print button */
+.print-btn{
+  background:var(--accent); border:none; color:#fff;
+  padding:7px 18px; border-radius:20px; cursor:pointer;
+  font-size:0.82rem; font-family:inherit; font-weight:700;
+  transition:all 0.2s;
+}
+.print-btn:hover{opacity:0.85;}
+
+/* ══════════════════════════════════════════
+   HEADER
+   ══════════════════════════════════════════ */
+header{
+  text-align:center; padding:26px 24px 20px;
+  border-bottom:1px solid var(--border); margin-bottom:22px;
+  background:var(--surface); border-radius:16px;
+  box-shadow:var(--card-shadow); transition:all 0.3s;
+}
+.h-logo{font-size:2.6rem;margin-bottom:4px;}
+.h-name{
+  font-size:1.9rem; font-weight:900;
+  background:linear-gradient(135deg,var(--accent),var(--accent2));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent;
+  background-clip:text;
+}
+.h-sub{color:var(--muted);font-size:0.9rem;margin-top:4px;}
+.h-badge{
+  display:inline-block; background:var(--surface2);
+  border:1px solid var(--border); border-radius:20px;
+  padding:3px 16px; font-size:0.8rem; color:var(--accent); margin-top:8px; font-weight:700;
+}
+.h-warn{
+  display:inline-block; background:rgba(239,68,68,0.1);
+  border:1px solid rgba(239,68,68,0.3); border-radius:20px;
+  padding:3px 14px; font-size:0.78rem; color:var(--danger);
+  margin-top:6px; margin-right:6px; font-weight:600;
+}
+body.light .h-warn{background:#fef2f2;border-color:#fecaca;}
+.startup-badge{
+  display:inline-flex; align-items:center; gap:5px;
+  background:rgba(139,92,246,0.1); border:1px solid rgba(139,92,246,0.25);
+  border-radius:20px; padding:3px 14px; font-size:0.78rem;
+  color:var(--accent); margin-bottom:6px; font-weight:600;
+}
+body.light .startup-badge{background:#f5f3ff;border-color:#ddd6fe;}
+
+/* ══════════════════════════════════════════
+   TABS
+   ══════════════════════════════════════════ */
+.tabs{
+  display:flex; gap:5px; flex-wrap:wrap; justify-content:center;
+  margin-bottom:22px; background:var(--surface);
+  border:1px solid var(--border); border-radius:14px; padding:6px;
+  box-shadow:var(--card-shadow); transition:all 0.3s;
+}
+.tab-btn{
+  background:transparent; border:none; color:var(--muted);
+  padding:8px 18px; border-radius:10px; cursor:pointer;
+  font-family:inherit; font-size:0.88rem; transition:all 0.18s; font-weight:600;
+}
+.tab-btn:hover{background:var(--surface2);color:var(--accent);}
+.tab-btn.active{
+  background:linear-gradient(135deg,var(--accent),#6d28d9);
+  color:#fff; box-shadow:0 2px 8px rgba(139,92,246,0.3);
+}
+body.light .tab-btn.active{background:var(--accent);box-shadow:0 2px 8px rgba(124,58,237,0.2);}
+
+/* ══════════════════════════════════════════
+   SECTIONS
+   ══════════════════════════════════════════ */
+.section{display:none;animation:fadeIn 0.28s ease;}
+.section.active{display:block;}
+@keyframes fadeIn{from{opacity:0;transform:translateY(8px);}to{opacity:1;transform:translateY(0);}}
+
+/* ══════════════════════════════════════════
+   CARDS
+   ══════════════════════════════════════════ */
+.card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:14px; padding:22px; margin-bottom:18px;
+  box-shadow:var(--card-shadow); transition:all 0.3s;
+}
+.card-title{font-size:1rem;font-weight:700;margin-bottom:4px;color:var(--text);}
+.card-sub{font-size:0.78rem;color:var(--muted);margin-bottom:14px;line-height:1.5;}
+
+/* ══════════════════════════════════════════
+   KPI GRID
+   ══════════════════════════════════════════ */
+.kpi-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:13px;margin-bottom:18px;}
+@media(max-width:900px){.kpi-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:500px){.kpi-grid{grid-template-columns:1fr;}}
+.kpi-card{
+  background:var(--surface); border:1px solid var(--border);
+  border-radius:12px; padding:16px; position:relative;
+  box-shadow:var(--card-shadow); transition:all 0.25s;
+  overflow:hidden;
+}
+.kpi-card:hover{transform:translateY(-2px);box-shadow:0 8px 28px rgba(0,0,0,0.15);}
+.kpi-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:3px; border-radius:12px 12px 0 0;
+}
+.kpi-card.purple::before{background:linear-gradient(90deg,#8b5cf6,#a78bfa);}
+.kpi-card.green::before{background:linear-gradient(90deg,#10b981,#34d399);}
+.kpi-card.red::before{background:linear-gradient(90deg,#ef4444,#f87171);}
+.kpi-card.yellow::before{background:linear-gradient(90deg,#f59e0b,#fbbf24);}
+body.light .kpi-card.purple::before{background:linear-gradient(90deg,#7c3aed,#8b5cf6);}
+body.light .kpi-card.green::before{background:linear-gradient(90deg,#059669,#10b981);}
+.kpi-icon{font-size:1.5rem;margin-bottom:5px;}
+.kpi-label{font-size:0.7rem;color:var(--muted);margin-bottom:3px;font-weight:700;text-transform:uppercase;letter-spacing:0.4px;}
+.kpi-value{font-size:1.45rem;font-weight:900;line-height:1.1;}
+.kpi-value.pos{color:var(--accent2);}
+.kpi-value.neg{color:var(--danger);}
+.kpi-value.pur{color:var(--accent);}
+.kpi-value.yel{color:var(--warning);}
+.kpi-change{font-size:0.72rem;margin-top:4px;}
+.kpi-change.up{color:var(--accent2);}
+.kpi-change.dn{color:var(--danger);}
+.kpi-change.flat{color:var(--muted);}
+
+/* ══════════════════════════════════════════
+   GRIDS & CHARTS
+   ══════════════════════════════════════════ */
+.g2{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.g3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:13px;}
+.g4{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;}
+@media(max-width:700px){.g2,.g3,.g4{grid-template-columns:1fr;}}
+.cw{position:relative;width:100%;}
+.cw-240{height:240px;}.cw-300{height:300px;}.cw-360{height:360px;}
+
+/* ══════════════════════════════════════════
+   TOGGLE BUTTONS & CHIPS
+   ══════════════════════════════════════════ */
+.tg{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.tb{
+  background:var(--surface2); border:1px solid var(--border);
+  color:var(--muted); padding:5px 13px; border-radius:18px;
+  cursor:pointer; font-family:inherit; font-size:0.78rem; font-weight:600; transition:all 0.15s;
+}
+.tb.active{background:var(--accent);border-color:var(--accent);color:#fff;}
+.tb:hover:not(.active){border-color:var(--accent);color:var(--accent);}
+.chips{display:flex;gap:5px;flex-wrap:wrap;margin-bottom:12px;}
+.chip{
+  padding:3px 10px; border-radius:12px; font-size:0.74rem;
+  cursor:pointer; border:1px solid transparent;
+  font-family:inherit; font-weight:600; transition:all 0.15s;
+}
+.chip.off{opacity:0.3;}
+
+/* ══════════════════════════════════════════
+   STAT BOXES
+   ══════════════════════════════════════════ */
+.stat-box{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:12px;text-align:center;transition:all 0.3s;}
+.stat-box .sl{font-size:0.72rem;color:var(--muted);margin-bottom:3px;font-weight:600;}
+.stat-box .sv{font-size:1rem;font-weight:700;color:var(--text);}
+
+/* ══════════════════════════════════════════
+   CASH FLOW
+   ══════════════════════════════════════════ */
+.cf-row{display:flex;align-items:center;justify-content:center;gap:12px;flex-wrap:wrap;padding:16px 0;}
+.cf-box{background:var(--surface2);border:1px solid var(--border);border-radius:11px;padding:14px 18px;text-align:center;min-width:140px;transition:all 0.3s;}
+.cf-box .cfl{font-size:0.72rem;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.cf-box .cfv{font-size:1.2rem;font-weight:900;}
+.cf-arr{font-size:1.3rem;color:var(--muted);}
+.stat-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-top:12px;}
+@media(max-width:600px){.stat-grid{grid-template-columns:1fr;}}
+
+/* ══════════════════════════════════════════
+   SIMULATOR
+   ══════════════════════════════════════════ */
+.sim-wrap{display:grid;grid-template-columns:1fr 1fr;gap:20px;}
+@media(max-width:700px){.sim-wrap{grid-template-columns:1fr;}}
+.sldr{margin-bottom:15px;}
+.sldr label{display:flex;justify-content:space-between;font-size:0.8rem;color:var(--muted);margin-bottom:4px;font-weight:600;}
+.sldr label span{color:var(--accent);font-weight:700;}
+input[type=range]{width:100%;accent-color:var(--accent);}
+.sim-out{display:grid;grid-template-columns:1fr 1fr;gap:9px;}
+.sim-box{background:var(--surface2);border:1px solid var(--border);border-radius:9px;padding:13px;text-align:center;}
+.sim-box .sl{font-size:0.72rem;color:var(--muted);margin-bottom:3px;font-weight:600;}
+.sim-box .sv{font-size:1.1rem;font-weight:900;}
+.sim-net{grid-column:1/-1;border-color:rgba(16,185,129,0.4);background:rgba(16,185,129,0.07);}
+.sim-net-loss{border-color:rgba(239,68,68,0.4)!important;background:rgba(239,68,68,0.07)!important;}
+
+/* ══════════════════════════════════════════
+   TARGET CARD
+   ══════════════════════════════════════════ */
+.target-card{
+  background:linear-gradient(135deg,#1a0a2e,#0f1a0f);
+  border:1px solid rgba(139,92,246,0.3);
+  border-radius:14px; padding:22px; margin-bottom:18px;
+  transition:all 0.3s;
+}
+body.light .target-card{
+  background:linear-gradient(135deg,#f5f3ff,#f0fdf4);
+  border-color:#ddd6fe;
+}
+.target-card .card-title{color:var(--text);}
+.target-card .card-sub{color:var(--muted);}
+
+/* ══════════════════════════════════════════
+   INSIGHTS
+   ══════════════════════════════════════════ */
+.insight{
+  background:var(--surface2); border-radius:9px;
+  padding:11px 15px; font-size:0.78rem; color:var(--muted);
+  margin-top:11px; line-height:1.7; border:1px solid var(--border);
+  transition:all 0.3s;
+}
+.insight.good{border-right:3px solid var(--accent2);background:rgba(16,185,129,0.04);}
+.insight.warn{border-right:3px solid var(--warning);background:rgba(245,158,11,0.04);}
+.insight.danger{border-right:3px solid var(--danger);background:rgba(239,68,68,0.04);}
+body.ltr .insight.good{border-right:none;border-left:3px solid var(--accent2);}
+body.ltr .insight.warn{border-right:none;border-left:3px solid var(--warning);}
+body.ltr .insight.danger{border-right:none;border-left:3px solid var(--danger);}
+body.light .insight.good{background:#f0fdf4;}
+body.light .insight.warn{background:#fffbeb;}
+body.light .insight.danger{background:#fef2f2;}
+
+/* ══════════════════════════════════════════
+   P&L TABLE
+   ══════════════════════════════════════════ */
+.pl-legend{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px;align-items:center;}
+.pl-badge{display:inline-block;font-size:0.7rem;padding:3px 10px;border-radius:8px;font-weight:700;}
+.badge-apr{background:rgba(100,116,139,0.2);color:#94a3b8;}
+body.light .badge-apr{background:#e2e8f0;color:#475569;}
+.badge-move{background:rgba(139,92,246,0.15);color:var(--accent);}
+body.light .badge-move{background:#ede9fe;color:#6d28d9;}
+.badge-may{background:rgba(16,185,129,0.15);color:var(--accent2);}
+body.light .badge-may{background:#d1fae5;color:#065f46;}
+.pl-wrap{overflow-x:auto;}
+.pl-tbl{width:100%;border-collapse:collapse;font-size:0.84rem;min-width:560px;}
+.pl-tbl th{
+  padding:10px 13px; font-size:0.7rem; font-weight:700;
+  text-transform:uppercase; letter-spacing:0.5px; color:var(--muted);
+  border-bottom:2px solid var(--border); white-space:nowrap;
+  background:var(--surface2);
+}
+.pl-tbl th.hm{color:var(--accent);}
+.pl-tbl td{padding:8px 13px;border-bottom:1px solid var(--border);}
+.pl-tbl tr:hover td{background:var(--pl-hover);}
+.pl-tbl .rt td{
+  font-weight:900; font-size:0.9rem; padding:10px 13px;
+  border-top:2px solid var(--pl-total-border);
+  border-bottom:2px solid var(--pl-total-border);
+  background:var(--pl-total-bg); color:var(--accent);
+}
+.pl-tbl .rn td{
+  font-weight:900; font-size:0.95rem; padding:12px 13px;
+  border-top:2px solid var(--pl-net-border);
+  background:var(--pl-net-bg); color:var(--danger);
+}
+.pl-tbl .rm td{color:var(--muted);font-size:0.78rem;font-style:italic;}
+.n{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap;}
+body.ltr .n{text-align:right;}
+.n.p{color:var(--accent2);font-weight:600;}
+.n.g{color:var(--danger);font-weight:600;}
+.n.mp{color:var(--accent2);font-weight:800;}
+.n.mg{color:var(--danger);font-weight:800;}
+.hcol{background:var(--pl-hcol);}
+
+/* ══════════════════════════════════════════
+   REV CHANNEL CARDS
+   ══════════════════════════════════════════ */
+.rch-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:13px;margin-bottom:14px;}
+@media(max-width:600px){.rch-grid{grid-template-columns:1fr;}}
+.rch{
+  background:var(--surface2); border:1px solid var(--border);
+  border-radius:11px; padding:15px; text-align:center;
+  position:relative; overflow:hidden; transition:all 0.3s;
+}
+.rch::after{content:'';position:absolute;bottom:0;left:0;right:0;height:3px;}
+.rch.c1::after{background:var(--accent);}
+.rch.c2::after{background:var(--accent2);}
+.rch-icon{font-size:1.3rem;margin-bottom:5px;}
+.rch-lbl{font-size:0.7rem;color:var(--muted);margin-bottom:3px;font-weight:700;text-transform:uppercase;}
+.rch-val{font-size:1.3rem;font-weight:900;}
+.rch-pct{font-size:0.7rem;color:var(--muted);margin-top:2px;}
+.rch-ytd{
+  font-size:0.7rem; margin-top:5px; padding:2px 8px;
+  border-radius:8px; display:inline-block;
+  background:rgba(139,92,246,0.1); color:var(--accent); font-weight:600;
+}
+body.light .rch-ytd{background:#ede9fe;}
+
+/* ══════════════════════════════════════════
+   PRINT STYLES
+   ══════════════════════════════════════════ */
+@media print {
+  body,html{background:#fff!important;color:#1e293b!important;}
+  body.light .bg-anim,body .bg-anim{display:none!important;}
+  .top-bar,.tabs,.tg,.chips,input[type=range],.print-btn,.lang-btn,.theme-btn{display:none!important;}
+  .section{display:block!important;page-break-inside:avoid;}
+  .card{
+    break-inside:avoid; box-shadow:none!important;
+    border:1px solid #d1d9e6!important; margin-bottom:12px;
+    background:#fff!important;
+  }
+  .kpi-card{break-inside:avoid;box-shadow:none!important;background:#fff!important;border-color:#d1d9e6!important;}
+  .container{padding:0;}
+  header{box-shadow:none!important;border:1px solid #d1d9e6!important;background:#fff!important;}
+  .cw-300{height:200px!important;}
+  .cw-360{height:240px!important;}
+  /* Force light colors in print */
+  *{--bg:#fff;--surface:#fff;--surface2:#f8f9fc;--border:#d1d9e6;--text:#1e293b;--muted:#64748b;}
+  .kpi-value.pur{color:#7c3aed!important;}
+  .kpi-value.pos{color:#059669!important;}
+  .kpi-value.neg{color:#dc2626!important;}
+  .kpi-value.yel{color:#d97706!important;}
+  .h-name{-webkit-text-fill-color:#7c3aed!important;background:none!important;color:#7c3aed!important;}
+  .pl-tbl th.hm{color:#7c3aed!important;}
+  .hcol{background:#f5f3ff!important;}
+  .n.p{color:#059669!important;}
+  .n.g{color:#dc2626!important;}
+  .n.mp{color:#059669!important;}
+  .n.mg{color:#dc2626!important;}
+  .insight{border:1px solid #d1d9e6!important;background:#f8f9fc!important;color:#475569!important;}
+  .stat-box{background:#f8f9fc!important;border-color:#d1d9e6!important;}
+  .rch{background:#f8f9fc!important;border-color:#d1d9e6!important;}
+  .cf-box{background:#f8f9fc!important;border-color:#d1d9e6!important;}
+}
+
+::-webkit-scrollbar{width:5px;height:5px;}
+::-webkit-scrollbar-track{background:var(--bg);}
+::-webkit-scrollbar-thumb{background:var(--border);border-radius:3px;}
+</style>
+</head>
+<body class="rtl">
+<div class="bg-anim"><span></span><span></span><span></span></div>
+<div class="container">
+
+<!-- ══════════ TOP BAR ══════════ -->
+<div class="top-bar">
+  <div class="top-bar-left">
+    <button class="lang-btn active" id="btnAR" onclick="setLang('ar')">🇦🇪 عربي</button>
+    <button class="lang-btn" id="btnEN" onclick="setLang('en')">🇬🇧 English</button>
+  </div>
+  <div class="top-bar-right">
+    <button class="theme-btn" id="themeBtn" onclick="toggleTheme()">☀️ <span id="themeLabel" data-ar="وضع الطباعة" data-en="Light Mode"></span></button>
+    <button class="print-btn" onclick="window.print()">🖨️ <span data-ar="طباعة" data-en="Print"></span></button>
+  </div>
+</div>
+
+<!-- ══════════ HEADER ══════════ -->
+<header>
+  <div class="h-logo">☕</div>
+  <div class="h-name" data-ar="جلامور كوفي آند ريستوران" data-en="Glamour Coffee & Restaurant"></div>
+  <div class="h-sub" data-ar="لوحة الأداء المالي الشهرية" data-en="Monthly Financial Performance Dashboard"></div>
+  <div class="h-badge" data-ar="مايو 2026 — دينار كويتي (KD)" data-en="May 2026 — Kuwaiti Dinar (KD)"></div>
+  <br>
+  <span class="startup-badge" data-ar="🚀 الشهر الثاني عشر للتشغيل — مايو 2026" data-en="🚀 Month 12 of Operations — May 2026"></span>
+  <span class="h-warn" data-ar="⚠️ خسارة شهرية: (2,770) KD" data-en="⚠️ Monthly Loss: (2,770) KD"></span>
+</header>
+
+<!-- ══════════ TABS ══════════ -->
+<div class="tabs">
+  <button class="tab-btn active" onclick="showTab('overview',this)" data-ar="📊 نظرة عامة" data-en="📊 Overview"></button>
+  <button class="tab-btn" onclick="showTab('pl',this)" data-ar="📑 الأرباح والخسائر" data-en="📑 P&L Statement"></button>
+  <button class="tab-btn" onclick="showTab('revenue',this)" data-ar="💰 الإيرادات" data-en="💰 Revenue"></button>
+  <button class="tab-btn" onclick="showTab('expenses',this)" data-ar="📋 المصاريف" data-en="📋 Expenses"></button>
+  <button class="tab-btn" onclick="showTab('cashflow',this)" data-ar="🏦 التدفق النقدي" data-en="🏦 Cash Flow"></button>
+  <button class="tab-btn" onclick="showTab('simulator',this)" data-ar="🎯 المحاكي" data-en="🎯 Simulator"></button>
+</div>
+
+<!-- ════════════════════════════════════════
+     OVERVIEW
+     ════════════════════════════════════════ -->
+<div id="tab-overview" class="section active">
+  <div class="kpi-grid">
+    <div class="kpi-card purple"><div class="kpi-icon">📈</div><div class="kpi-label" data-ar="إيرادات مايو 2026 (الشهر)" data-en="May 2026 Revenue (Month)"></div><div class="kpi-value pur">2,128 KD</div><div class="kpi-change flat" data-ar="🆕 قنوات جديدة: كيتا وطلبات" data-en="🆕 New: Keeta & Talabat channels"></div></div>
+    <div class="kpi-card green"><div class="kpi-icon">📊</div><div class="kpi-label" data-ar="هامش الربح الإجمالي" data-en="Gross Profit Margin"></div><div class="kpi-value pur">100%</div><div class="kpi-change flat" data-ar="تكاليف بضاعة رمزية (7 KD)" data-en="Minimal COGS (7 KD)"></div></div>
+    <div class="kpi-card red"><div class="kpi-icon">📉</div><div class="kpi-label" data-ar="صافي الخسارة — مايو 2026" data-en="Net Loss — May 2026"></div><div class="kpi-value neg">(2,770) KD</div><div class="kpi-change dn" data-ar="المصاريف تفوق الإيرادات 2.2×" data-en="Expenses exceed revenue 2.2×"></div></div>
+    <div class="kpi-card yellow"><div class="kpi-icon">🧾</div><div class="kpi-label" data-ar="المصاريف الإدارية (مايو)" data-en="G&A Expenses (May)"></div><div class="kpi-value yel">4,269 KD</div><div class="kpi-change dn" data-ar="▲ 201% من الإيرادات" data-en="▲ 201% of revenue"></div></div>
+    <div class="kpi-card green"><div class="kpi-icon">🏦</div><div class="kpi-label" data-ar="النقدية الختامية 31 مايو" data-en="Closing Cash May 31"></div><div class="kpi-value pos">1,046 KD</div><div class="kpi-change flat" data-ar="مدعومة بضخ الشركاء" data-en="Supported by partner injection"></div></div>
+    <div class="kpi-card red"><div class="kpi-icon">🎯</div><div class="kpi-label" data-ar="المبيعات اليومية الحالية" data-en="Current Daily Sales"></div><div class="kpi-value neg">~82 KD</div><div class="kpi-change dn" data-ar="الهدف: 350 KD يومياً" data-en="Target: 350 KD/day"></div></div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-ar="📊 ملخص الأداء — مايو 2025 (الشهر الأول)" data-en="📊 Performance Summary — May 2025 (First Month)"></div>
+    <div class="card-sub" data-ar="المؤشرات الرئيسية لمايو 2026 (من عمود حركة الفترة)" data-en="Key indicators for May 2026 (from Period Movement column)"></div>
+    <div class="cw cw-360"><canvas id="cPerf"></canvas></div>
+    <div class="insight danger" data-ar="⚠️ المصاريف الإدارية (4,269 KD) لا تزال تفوق الإيرادات (2,128 KD) بمقدار 2× — ضرورة تسريع نمو المبيعات عبر قنوات التوصيل الجديدة (كيتا وطلبات)." data-en="⚠️ G&A expenses (4,269 KD) still exceed revenue (2,128 KD) by 2× — must accelerate sales growth through new delivery channels (Keeta & Talabat)."></div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-ar="🎯 الفجوة — الوضع الحالي vs نقطة التعادل vs الهدف" data-en="🎯 Gap — Current vs Break-Even vs Target"></div>
+    <div class="card-sub" data-ar="مقارنة إيرادات مايو الفعلية بنقطة التعادل والهدف المنصوح به" data-en="Comparing actual May revenue with break-even point and recommended target"></div>
+    <div class="cw cw-300"><canvas id="cGap"></canvas></div>
+    <div class="insight warn" data-ar="💡 نقطة التعادل = 188 KD/يوم | الهدف = 350 KD/يوم | الوضع الحالي ≈ 75 KD/يوم — الفجوة 275 KD يومياً." data-en="💡 Break-even = 188 KD/day | Target = 350 KD/day | Current ≈ 75 KD/day — gap is 275 KD/day."></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     P&L
+     ════════════════════════════════════════ -->
+<div id="tab-pl" class="section">
+  <div class="card">
+    <div class="card-title" data-ar="📑 قائمة الأرباح والخسائر — كما في 31 مايو 2025" data-en="📑 Profit or Loss Statement — As of May 31, 2025"></div>
+    <div class="card-sub" data-ar="أبريل = قبل مايو (تراكمي يناير→أبريل 2025) | حركة الفترة = مايو 2026 وحده | مايو = التراكمي الكامل" data-en="April = Pre-May (cumulative Jan→Apr 2025) | Period Movement = May 2026 only | May = Full cumulative"></div>
+    <div class="pl-legend">
+      <span class="pl-badge badge-apr" data-ar="أبريل 30، 2025 — تراكمي" data-en="Apr 30, 2025 — Cumulative"></span>
+      <span class="pl-badge badge-move" data-ar="حركة الفترة — مايو 2026 فقط" data-en="Period Movement — May 2026 Only"></span>
+      <span class="pl-badge badge-may" data-ar="مايو 31، 2026 — تراكمي" data-en="May 31, 2026 — Cumulative"></span>
+    </div>
+    <div class="pl-wrap">
+      <table class="pl-tbl">
+        <thead><tr>
+          <th style="min-width:220px;" data-ar="البيان" data-en="Item"></th>
+          <th data-ar="ملاحظة" data-en="Note"></th>
+          <th class="n" data-ar="أبريل 30، 2025" data-en="April 30, 2025"></th>
+          <th class="n hm hcol" data-ar="حركة الفترة (مايو 2026)" data-en="Period Movement (May 2026)"></th>
+          <th class="n" data-ar="مايو 31، 2026" data-en="May 31, 2026"></th>
+        </tr></thead>
+        <tbody id="plBody"></tbody>
+      </table>
+    </div>
+    <div class="g4" style="margin-top:16px;">
+      <div class="stat-box"><div class="sl" data-ar="هامش إجمالي — مايو" data-en="Gross Margin — May"></div><div class="sv" style="color:var(--accent);">100%</div></div>
+      <div class="stat-box"><div class="sl" data-ar="هامش إجمالي — تراكمي" data-en="Gross Margin — Cumulative"></div><div class="sv" style="color:var(--accent);">55%</div></div>
+      <div class="stat-box"><div class="sl" data-ar="صافي/إيرادات — مايو" data-en="Net Margin — May"></div><div class="sv" style="color:var(--danger);">-130%</div></div>
+      <div class="stat-box"><div class="sl" data-ar="صافي/إيرادات — تراكمي" data-en="Net Margin — Cumulative"></div><div class="sv" style="color:var(--danger);">-271%</div></div>
+    </div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-ar="📊 مقارنة بصرية — مايو الشهري مقابل التراكمي" data-en="📊 Visual Comparison — Monthly vs Cumulative"></div>
+    <div class="card-sub" data-ar="مايو وحده مقابل التراكمي الكامل" data-en="May standalone vs full cumulative"></div>
+    <div class="tg">
+      <button class="tb active" id="plV1" onclick="switchPLV('month',this)" data-ar="مايو فقط" data-en="May Only"></button>
+      <button class="tb" id="plV2" onclick="switchPLV('ytd',this)" data-ar="تراكمي" data-en="Cumulative"></button>
+      <button class="tb" id="plV3" onclick="switchPLV('both',this)" data-ar="المقارنة" data-en="Side by Side"></button>
+    </div>
+    <div class="cw cw-360"><canvas id="cPLChart"></canvas></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     REVENUE
+     ════════════════════════════════════════ -->
+<div id="tab-revenue" class="section">
+  <div class="card">
+    <div class="card-title" data-ar="💰 مصادر الإيراد — مايو 2025 (الشهر الأول)" data-en="💰 Revenue Sources — May 2025 (First Month)"></div>
+    <div class="card-sub" data-ar="إجمالي مايو 2026: 2,128 KD (من حركة الفترة) | قنوات جديدة: كيتا وطلبات" data-en="May 2026 total: 2,128 KD (from Period Movement) | New channels: Keeta & Talabat"></div>
+    <div class="rch-grid" style="grid-template-columns:repeat(2,1fr);">
+      <div class="rch c1">
+        <div class="rch-icon">🏧</div>
+        <div class="rch-lbl" data-ar="كي-نت — مايو 2026" data-en="Knet — May 2026"></div>
+        <div class="rch-val" style="color:var(--accent);">1,777 KD</div>
+        <div class="rch-pct">83.5% <span data-ar="من الإجمالي" data-en="of total"></span></div>
+        <div class="rch-ytd" data-ar="تراكمي: 1,777 KD" data-en="Cumulative: 1,777 KD"></div>
+      </div>
+      <div class="rch c2">
+        <div class="rch-icon">💳</div>
+        <div class="rch-lbl" data-ar="بطاقات ائتمان — مايو 2026" data-en="Credit Cards — May 2026"></div>
+        <div class="rch-val" style="color:var(--accent2);">177 KD</div>
+        <div class="rch-pct">8.3% <span data-ar="من الإجمالي" data-en="of total"></span></div>
+        <div class="rch-ytd" data-ar="تراكمي: 177 KD" data-en="Cumulative: 177 KD"></div>
+      </div>
+    </div>
+    <!-- NEW: Delivery channels -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:13px;margin-bottom:14px;">
+      <div class="rch" style="border-color:rgba(251,146,60,0.4);">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:#f97316;"></div>
+        <div class="rch-icon">🛵</div>
+        <div class="rch-lbl" data-ar="طلبات — مايو 2026" data-en="Talabat — May 2026"></div>
+        <div class="rch-val" style="color:#f97316;">224 KD</div>
+        <div class="rch-pct" data-ar="10.5% | عمولة: (65 KD)" data-en="10.5% | Commission: (65 KD)"></div>
+        <div class="rch-ytd" style="background:rgba(249,115,22,0.1);color:#f97316;" data-ar="صافي: 159 KD" data-en="Net: 159 KD"></div>
+      </div>
+      <div class="rch" style="border-color:rgba(34,211,238,0.4);">
+        <div style="position:absolute;bottom:0;left:0;right:0;height:3px;background:#22d3ee;"></div>
+        <div class="rch-icon">🏍️</div>
+        <div class="rch-lbl" data-ar="كيتا — مايو 2026" data-en="Keeta — May 2026"></div>
+        <div class="rch-val" style="color:#22d3ee;">26 KD</div>
+        <div class="rch-pct" data-ar="1.2% | عمولة: (11 KD)" data-en="1.2% | Commission: (11 KD)"></div>
+        <div class="rch-ytd" style="background:rgba(34,211,238,0.1);color:#22d3ee;" data-ar="صافي: 15 KD" data-en="Net: 15 KD"></div>
+      </div>
+    </div>
+    <div class="insight good" data-ar="✅ إضافة كيتا وطلبات قنوات توصيل جديدة — الإيرادات الإجمالية: 2,128 KD. العمولات: طلبات (65 KD)، كيتا (11 KD) = صافي توصيل 174 KD." data-en="✅ Keeta & Talabat added as delivery channels — total revenue: 2,128 KD. Commissions: Talabat (65 KD), Keeta (11 KD) = net delivery 174 KD."></div>
+    <div class="tg" style="margin-top:14px;">
+      <button class="tb active" id="rD" onclick="switchRev('doughnut',this)" data-ar="دائري مجوف" data-en="Doughnut"></button>
+      <button class="tb" id="rP" onclick="switchRev('pie',this)" data-ar="دائري" data-en="Pie"></button>
+      <button class="tb" id="rB" onclick="switchRev('bar',this)" data-ar="أعمدة" data-en="Bar"></button>
+    </div>
+    <div class="g2">
+      <div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;" data-ar="توزيع مايو الشهري" data-en="May Monthly Breakdown"></div>
+        <div class="cw cw-300"><canvas id="cRevSrc"></canvas></div>
+      </div>
+      <div>
+        <div style="font-size:0.68rem;color:var(--muted);margin-bottom:6px;font-weight:700;text-transform:uppercase;" data-ar="الإيرادات مقابل إجمالي التكاليف" data-en="Revenue vs Total Costs"></div>
+        <div class="cw cw-300"><canvas id="cRevVsExp"></canvas></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     EXPENSES
+     ════════════════════════════════════════ -->
+<div id="tab-expenses" class="section">
+  <div class="card">
+    <div class="card-title" data-ar="📋 تحليل المصاريف — مايو 2026" data-en="📋 Expense Analysis — May 2026"></div>
+    <div class="card-sub" data-ar="إجمالي المصاريف الإدارية: 4,269 KD | الاستهلاك: 622 KD | تكاليف التشغيل: 7 KD" data-en="Total G&A: 4,269 KD | Depreciation: 622 KD | Operating Cost: 7 KD"></div>
+    <div class="tg">
+      <button class="tb active" id="eBar" onclick="switchExp('bar',this)" data-ar="أعمدة عمودية" data-en="Vertical Bars"></button>
+      <button class="tb" id="eHBar" onclick="switchExp('hbar',this)" data-ar="أعمدة أفقية" data-en="Horizontal Bars"></button>
+      <button class="tb" id="ePie" onclick="switchExp('pie',this)" data-ar="دائري" data-en="Pie"></button>
+    </div>
+    <div class="chips" id="expChips"></div>
+    <div class="cw cw-360"><canvas id="cExp"></canvas></div>
+    <div class="insight danger" data-ar="🔴 الرواتب (2,314 KD) والإيجار (1,500 KD) يمثلان 89.7% من المصاريف الإدارية. هذه تكاليف ثابتة — الحل الوحيد رفع الإيرادات." data-en="🔴 Salaries (2,314 KD) and Rent (1,500 KD) = 89.7% of G&A. Fixed costs — the only solution is increasing revenue."></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     CASH FLOW
+     ════════════════════════════════════════ -->
+<div id="tab-cashflow" class="section">
+  <div class="card">
+    <div class="card-title" data-ar="🏦 التدفق النقدي — مايو 2026 (منذ التأسيس)" data-en="🏦 Cash Flow — May 2026 (Since Inception)"></div>
+    <div class="card-sub" data-ar="حركة النقدية منذ بداية التشغيل" data-en="Cash movements since start of operations"></div>
+    <div class="cf-row">
+      <div class="cf-box"><div class="cfl" data-ar="النقدية الافتتاحية" data-en="Opening Cash"></div><div class="cfv" style="color:var(--muted);">0 KD</div></div>
+      <div class="cf-arr">←</div>
+      <div class="cf-box" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.3);">
+        <div class="cfl" data-ar="صافي الزيادة" data-en="Net Increase"></div>
+        <div class="cfv" style="color:var(--accent2);">+ 1,046 KD</div>
+      </div>
+      <div class="cf-arr">←</div>
+      <div class="cf-box" style="background:rgba(16,185,129,0.1);border-color:rgba(16,185,129,0.4);">
+        <div class="cfl" data-ar="النقدية الختامية 31 مايو" data-en="Closing Cash May 31"></div>
+        <div class="cfv" style="color:var(--accent2);">1,046 KD</div>
+      </div>
+    </div>
+    <div class="stat-grid">
+      <div class="stat-box"><div class="sl" data-ar="⚙️ تدفق تشغيلي" data-en="⚙️ Operating CF"></div><div class="sv" style="color:var(--danger);">(1,945) KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="🏗️ تدفق استثماري" data-en="🏗️ Investing CF"></div><div class="sv" style="color:var(--danger);">(1,813) KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="👥 ضخ الشركاء" data-en="👥 Partners Injection"></div><div class="sv" style="color:var(--accent2);">4,804 KD</div></div>
+    </div>
+    <div class="insight warn" data-ar="ℹ️ النقدية الموجبة (1,046 KD) جاءت كلياً من ضخ الشركاء (4,804 KD) — التشغيل لا يزال يستنزف النقدية. يجب الوصول لنقطة التعادل قريباً." data-en="ℹ️ Positive cash (1,046 KD) came entirely from partners' injection (4,804 KD) — operations are still cash-negative. Break-even must be reached soon."></div>
+  </div>
+  <div class="card">
+    <div class="card-title" data-ar="⚖️ المركز المالي — 31 مايو 2026" data-en="⚖️ Financial Position — May 31, 2026"></div>
+    <div class="card-sub" data-ar="ملخص الأصول والخصوم وحقوق الملكية" data-en="Assets, liabilities and equity summary"></div>
+    <div class="stat-grid" style="margin-bottom:14px;">
+      <div class="stat-box"><div class="sl" data-ar="إجمالي الأصول" data-en="Total Assets"></div><div class="sv" style="color:var(--accent);">40,268 KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="ذمم دائنة" data-en="Accounts Payable"></div><div class="sv" style="color:var(--danger);">4,106 KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="حقوق الملكية" data-en="Total Equity"></div><div class="sv" style="color:var(--accent2);">497,390 KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="الأصول المتداولة" data-en="Current Assets"></div><div class="sv">3,899 KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="الأصول الثابتة (صافي)" data-en="Fixed Assets (Net)"></div><div class="sv">36,369 KD</div></div>
+      <div class="stat-box"><div class="sl" data-ar="رأس المال" data-en="Capital"></div><div class="sv" style="color:var(--accent);">500,000 KD</div></div>
+    </div>
+    <div class="cw cw-300"><canvas id="cBS"></canvas></div>
+    <div class="insight warn" data-ar="* الخصوم السالبة في الميزانية (457,122 KD) تعكس ديوناً للأطراف ذات الصلة — في الغالب ضخ تمويلي من المساهمين يُعامل كحقوق ملكية فعلياً." data-en="* Negative liabilities (457,122 KD) reflect related-party balances — likely shareholder financing effectively treated as equity."></div>
+  </div>
+</div>
+
+<!-- ════════════════════════════════════════
+     SIMULATOR
+     ════════════════════════════════════════ -->
+<div id="tab-simulator" class="section">
+  <div class="card">
+    <div class="card-title" data-ar="⚡ تحليل نقطة التعادل" data-en="⚡ Break-Even Analysis"></div>
+    <div class="card-sub" data-ar="كم يجب أن تكون المبيعات اليومية للوصول لنقطة التعادل؟ — بناءً على أرقام مايو" data-en="What daily sales are needed to break even? — Based on May figures"></div>
+    <div class="cw cw-300"><canvas id="cBreakEven"></canvas></div>
+    <div class="insight good" data-ar="💡 نقطة التعادل = 188 KD/يوم (26 يوم = 4,891 KD) | هدف التقرير = 350 KD/يوم → ربح 769 KD شهرياً." data-en="💡 Break-even = 188 KD/day (26 days = 4,891 KD) | Report target = 350 KD/day → 769 KD monthly profit."></div>
+  </div>
+
+  <div class="target-card">
+    <div class="card-title" data-ar="🎯 التوصية — مسار الربحية المستهدف" data-en="🎯 Recommendation — Target Profitability Path"></div>
+    <div class="card-sub" data-ar="26 يوم × 350 KD يومياً — الهدف المحدد في التقرير" data-en="26 working days × 350 KD daily — target set in the report"></div>
+    <div class="g3" style="margin-top:14px;">
+      <div class="stat-box"><div class="sl" data-ar="أيام العمل" data-en="Working Days"></div><div class="sv">26</div></div>
+      <div class="stat-box"><div class="sl" data-ar="المبيعات اليومية المستهدفة" data-en="Target Daily Sales"></div><div class="sv" style="color:var(--accent);">350 KD</div></div>
+      <div class="stat-box" style="background:rgba(16,185,129,0.08);border-color:rgba(16,185,129,0.3);"><div class="sl" data-ar="الربح المتوقع" data-en="Projected Profit"></div><div class="sv" style="color:var(--accent2);">769 KD</div></div>
+    </div>
+  </div>
+
+  <div class="card">
+    <div class="card-title" data-ar="🎰 المحاكي التفاعلي" data-en="🎰 Interactive Profitability Simulator"></div>
+    <div class="card-sub" data-ar="حرّك الأشرطة لمحاكاة سيناريوهات نمو المبيعات" data-en="Adjust sliders to simulate revenue growth scenarios"></div>
+    <div class="sim-wrap">
+      <div>
+        <div class="sldr"><label><span data-ar="أيام العمل" data-en="Working Days"></span><span id="vDays">26</span></label><input type="range" id="sDays" min="15" max="31" value="26" oninput="runSim()"></div>
+        <div class="sldr"><label><span data-ar="المبيعات اليومية" data-en="Daily Sales (KD)"></span><span id="vDaily">75 KD</span></label><input type="range" id="sDaily" min="50" max="700" value="75" oninput="runSim()"></div>
+        <div class="sldr"><label><span data-ar="تغيير المصاريف الإدارية" data-en="G&A Change %"></span><span id="vGA">0%</span></label><input type="range" id="sGA" min="-30" max="30" value="0" oninput="runSim()"></div>
+        <div class="sldr"><label><span data-ar="نسبة تكلفة التشغيل" data-en="Operating Cost %"></span><span id="vCost">1%</span></label><input type="range" id="sCost" min="0" max="45" value="1" oninput="runSim()"></div>
+      </div>
+      <div>
+        <div class="sim-out">
+          <div class="sim-box"><div class="sl" data-ar="الإيرادات المتوقعة" data-en="Projected Revenue"></div><div class="sv" style="color:var(--accent);" id="oRev">—</div></div>
+          <div class="sim-box"><div class="sl" data-ar="إجمالي الربح" data-en="Gross Profit"></div><div class="sv" style="color:var(--accent2);" id="oGP">—</div></div>
+          <div class="sim-box"><div class="sl" data-ar="المصاريف الإدارية" data-en="G&A Expenses"></div><div class="sv" style="color:var(--warning);" id="oGA">—</div></div>
+          <div class="sim-box"><div class="sl" data-ar="الاستهلاك" data-en="Depreciation"></div><div class="sv" style="color:var(--muted);">622 KD</div></div>
+          <div class="sim-box sim-net" id="oNetBox"><div class="sl" data-ar="صافي الربح / (الخسارة)" data-en="Net Profit / (Loss)"></div><div class="sv" id="oNet">—</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+</div><!-- /container -->
+<script>
+// ════════════════════════════════════════════════
+// THEME
+// ════════════════════════════════════════════════
+let THEME='dark';
+function toggleTheme(){
+  THEME = THEME==='dark'?'light':'dark';
+  document.body.classList.toggle('light', THEME==='light');
+  // Update button
+  const btn=document.getElementById('themeBtn');
+  const lbl=document.getElementById('themeLabel');
+  if(THEME==='light'){
+    btn.textContent='';
+    btn.appendChild(document.createTextNode('🌙 '));
+    const sp=document.createElement('span');
+    sp.setAttribute('data-ar','الوضع الداكن');sp.setAttribute('data-en','Dark Mode');
+    sp.textContent=sp.getAttribute('data-'+LANG);
+    btn.appendChild(sp);
+  } else {
+    btn.textContent='';
+    btn.appendChild(document.createTextNode('☀️ '));
+    const sp=document.createElement('span');
+    sp.setAttribute('data-ar','وضع الطباعة');sp.setAttribute('data-en','Light Mode');
+    sp.textContent=sp.getAttribute('data-'+LANG);
+    btn.appendChild(sp);
+  }
+  // Rebuild all charts with new palette
+  Object.keys(CH).forEach(k=>{if(CH[k]){CH[k].destroy();CH[k]=null;}});
+  Object.keys(TI).forEach(k=>TI[k]=false);
+  TI.overview=true; buildPerf(); buildGap();
+  const at=document.querySelector('.section.active');
+  const aid=at?at.id.replace('tab-',''):'overview';
+  if(aid==='pl'){TI.pl=true;buildPLTable();buildPLChart();}
+  if(aid==='revenue'){TI.revenue=true;buildRevSrc();buildRevVsExp();}
+  if(aid==='expenses'){TI.expenses=true;buildChips();buildExp();}
+  if(aid==='cashflow'){TI.cashflow=true;buildBS();}
+  if(aid==='simulator'){TI.simulator=true;buildBreakEven();runSim();}
+}
+
+// ════════════════════════════════════════════════
+// LANGUAGE
+// ════════════════════════════════════════════════
+let LANG='ar';
+function setLang(l){
+  LANG=l;
+  document.body.classList.toggle('ltr',l==='en');
+  document.body.classList.toggle('rtl',l==='ar');
+  document.documentElement.lang=l;
+  document.getElementById('btnAR').classList.toggle('active',l==='ar');
+  document.getElementById('btnEN').classList.toggle('active',l==='en');
+  document.querySelectorAll('[data-ar]').forEach(el=>{
+    if(el.tagName==='INPUT'||el.tagName==='CANVAS')return;
+    el.textContent=el.getAttribute('data-'+l)||el.getAttribute('data-ar');
+  });
+  // Rebuild charts
+  Object.keys(CH).forEach(k=>{if(CH[k]){CH[k].destroy();CH[k]=null;}});
+  Object.keys(TI).forEach(k=>TI[k]=false);
+  TI.overview=true; buildPerf(); buildGap();
+  const at=document.querySelector('.section.active');
+  const aid=at?at.id.replace('tab-',''):'overview';
+  if(aid==='pl'){TI.pl=true;buildPLTable();buildPLChart();}
+  if(aid==='revenue'){TI.revenue=true;buildRevSrc();buildRevVsExp();}
+  if(aid==='expenses'){TI.expenses=true;buildChips();buildExp();}
+  if(aid==='cashflow'){TI.cashflow=true;buildBS();}
+  if(aid==='simulator'){TI.simulator=true;buildBreakEven();runSim();}
+}
+
+// ════════════════════════════════════════════════
+// PALETTE — reads CSS vars at call time
+// ════════════════════════════════════════════════
+function cs(v){ return getComputedStyle(document.body).getPropertyValue(v).trim(); }
+function palette(){
+  const dark=THEME==='dark';
+  return {
+    purple: dark?'#8b5cf6':'#7c3aed',
+    green:  dark?'#10b981':'#059669',
+    red:    dark?'#ef4444':'#dc2626',
+    amber:  dark?'#f59e0b':'#d97706',
+    muted:  dark?'#64748b':'#94a3b8',
+    grid:   dark?'rgba(255,255,255,0.04)':'rgba(0,0,0,0.05)',
+    text:   dark?'#94a3b8':'#64748b',
+    ttBg:   dark?'#1a2235':'#ffffff',
+    ttBdr:  dark?'#1e2d45':'#d1d9e6',
+    ttTitle:dark?'#e2e8f0':'#1e293b',
+    ttBody: dark?'#94a3b8':'#475569',
+  };
+}
+function mkTT(){
+  const p=palette();
+  return {backgroundColor:p.ttBg,borderColor:p.ttBdr,borderWidth:1,padding:11,cornerRadius:8,titleColor:p.ttTitle,bodyColor:p.ttBody};
+}
+function mkGR(){return {color:palette().grid};}
+
+// ════════════════════════════════════════════════
+// DATA
+// ════════════════════════════════════════════════
+const D={
+  // May 2026 (Period Movement) — إيرادات أعلى بسبب كيتا وطلبات
+  mRev:2128, mOpCost:7, mGP:2121, mGA:4269, mDep:622, mNet:-2770,
+  ytdRev:2128, ytdOpCost:955, ytdGP:1173, ytdGA:6311, ytdDep:622, ytdNet:-5760,
+  // Revenue channels May 2026 (Period Movement)
+  mRevKnet:1777, mRevCard:177, mRevTalabat:224, mRevKeeta:26,
+  mRevTalabatNet:159, mRevKeetaNet:15,
+  // Commissions (deducted in operating revenue)
+  mRevTalabatShare:-65, mRevKeetaShare:-11,
+  eL_ar:['الرواتب والأجور','الإيجار','مصاريف الإجازات','مكافأة نهاية الخدمة','رسوم بنكية','المرافق','سيارة ووقود'],
+  eL_en:['Salaries & Wages','Rent','Leave Expenses','End of Service','Bank Charges','Utilities','Car & Petrol'],
+  eVals:[2314,1500,282,141,20,12,7],
+  eClr_dark:['#ef4444','#f97316','#06b6d4','#fbbf24','#fb923c','#10b981','#ec4899'],
+  eClr_light:['#dc2626','#ea580c','#0891b2','#ca8a04','#ea580c','#059669','#db2777'],
+};
+function eClr(){ return THEME==='dark'?D.eClr_dark:D.eClr_light; }
+function eL(){ return LANG==='ar'?D.eL_ar:D.eL_en; }
+
+// P&L rows
+const PLR=[
+  {rt:'r',ar:'إيرادات التشغيل',en:'Operating revenue',note:'8',apr:0,move:1954,may:2128},
+  {rt:'r',ar:'تكاليف التشغيل',en:'Operating cost',note:'9',apr:-948,move:-7,may:-955},
+  {rt:'t',ar:'إجمالي الربح',en:'Gross profit',note:'',apr:-948,move:2121,may:1173},
+  {rt:'r',ar:'المصاريف الإدارية والعمومية',en:'G&A expenses',note:'10',apr:-2042,move:-4269,may:-6311},
+  {rt:'r',ar:'الاستهلاك',en:'Depreciation',note:'3',apr:0,move:-622,may:-622},
+  {rt:'t',ar:'الربح من العمليات',en:'Profit from operations',note:'',apr:-2990,move:-2770,may:-5760},
+  {rt:'m',ar:'إيرادات أخرى',en:'Other income',note:'',apr:0,move:0,may:0},
+  {rt:'n',ar:'صافي الربح / (الخسارة) للفترة',en:'Net profit / (loss)',note:'',apr:-2990,move:-2770,may:-5760},
+];
+function fN(v){if(v===0)return '<td class="n" style="color:var(--muted)">—</td>';const neg=v<0,a=Math.abs(v).toLocaleString();return `<td class="n ${neg?'g':'p'}">${neg?'('+a+')':a}</td>`;}
+function fM(v){if(v===0)return '<td class="n hcol" style="color:var(--muted)">—</td>';const neg=v<0,a=Math.abs(v).toLocaleString();return `<td class="n hcol ${neg?'mg':'mp'}">${neg?'('+a+')':a}</td>`;}
+function buildPLTable(){
+  const b=document.getElementById('plBody');if(!b)return;
+  let h='';
+  PLR.forEach(r=>{
+    const cls=r.rt==='t'?'rt':r.rt==='n'?'rn':r.rt==='m'?'rm':'';
+    const lbl=LANG==='ar'?r.ar:r.en;
+    h+=`<tr class="${cls}"><td>${lbl}</td><td style="color:var(--muted);font-size:0.7rem;">${r.note}</td>${fN(r.apr)}${fM(r.move)}${fN(r.may)}</tr>`;
+  });
+  b.innerHTML=h;
+}
+
+// ════════════════════════════════════════════════
+// CHART REGISTRY
+// ════════════════════════════════════════════════
+const CH={perf:null,gap:null,plc:null,revSrc:null,revVsExp:null,exp:null,bs:null,breakeven:null};
+const TI={overview:false,pl:false,revenue:false,expenses:false,cashflow:false,simulator:false};
+Chart.defaults.font.family="'Cairo','Inter',sans-serif";
+Chart.defaults.color='#64748b';
+const kd=v=>{const a=Math.abs(Math.round(v));return v<0?'('+a.toLocaleString()+') KD':a.toLocaleString()+' KD';};
+
+// ════════════════════════════════════════════════
+// BUILD CHARTS
+// ════════════════════════════════════════════════
+function buildPerf(){
+  if(CH.perf)CH.perf.destroy();
+  const p=palette(),la=LANG==='ar';
+  const labels=la?['إيرادات التشغيل','إجمالي الربح','المصاريف الإدارية','صافي الخسارة']:['Operating Revenue','Gross Profit','G&A Expenses','Net Loss'];
+  CH.perf=new Chart(document.getElementById('cPerf'),{type:'bar',data:{labels,datasets:[{
+    label:la?'مايو 2026':'May 2026',
+    data:[D.mRev,D.mGP,D.mGA,Math.abs(D.mNet)],
+    backgroundColor:[p.purple+'bb',p.green+'bb',p.amber+'bb',p.red+'bb'],
+    borderColor:[p.purple,p.green,p.amber,p.red],
+    borderWidth:2,borderRadius:6
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:p.text}},tooltip:mkTT()},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+}
+
+function buildGap(){
+  if(CH.gap)CH.gap.destroy();
+  const p=palette(),la=LANG==='ar';
+  const labels=la?['الإيرادات الفعلية','نقطة التعادل','الهدف المستهدف']:['Actual Revenue','Break-Even','Target Revenue'];
+  CH.gap=new Chart(document.getElementById('cGap'),{type:'bar',data:{labels,datasets:[{
+    label:'KD',data:[D.mRev,4891,9100],
+    backgroundColor:[p.red+'bb',p.amber+'bb',p.green+'bb'],
+    borderColor:[p.red,p.amber,p.green],
+    borderWidth:2,borderRadius:6
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...mkTT(),callbacks:{label:c=>c.raw.toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+}
+
+let plView='month';
+function buildPLChart(){
+  if(CH.plc)CH.plc.destroy();
+  const p=palette(),la=LANG==='ar';
+  const cats=la?['إيرادات','إجمالي الربح','المصاريف الإدارية','صافي الخسارة']:['Revenue','Gross Profit','G&A Expenses','Net Loss'];
+  const ds=[];
+  if(plView==='month'||plView==='both')ds.push({label:la?'مايو (الشهر)':'May (Month)',data:[D.mRev,D.mGP,D.mGA,Math.abs(D.mNet)],backgroundColor:[p.purple+'bb',p.green+'bb',p.amber+'bb',p.red+'bb'],borderWidth:0,borderRadius:5});
+  if(plView==='ytd'||plView==='both')ds.push({label:la?'تراكمي':'Cumulative',data:[D.ytdRev,D.ytdGP,D.ytdGA,Math.abs(D.ytdNet)],backgroundColor:[p.purple+'22',p.green+'22',p.amber+'22',p.red+'22'],borderColor:[p.purple,p.green,p.amber,p.red],borderWidth:1.5,borderRadius:5});
+  CH.plc=new Chart(document.getElementById('cPLChart'),{type:'bar',data:{labels:cats,datasets:ds},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:p.text}},tooltip:{...mkTT(),callbacks:{label:c=>c.dataset.label+': '+c.raw.toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+}
+function switchPLV(v,btn){plView=v;document.querySelectorAll('#tab-pl .tg .tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildPLChart();}
+
+let revType='doughnut';
+function buildRevSrc(){
+  if(CH.revSrc)CH.revSrc.destroy();
+  const p=palette(),la=LANG==='ar';
+  const labels=la?['كي-نت','بطاقات ائتمان','طلبات (صافي)','كيتا (صافي)']:['Knet','Credit Cards','Talabat (Net)','Keeta (Net)'];
+  const vals=[D.mRevKnet,D.mRevCard,D.mRevTalabatNet,D.mRevKeetaNet];
+  const colors=[p.purple,p.green,'#f97316','#22d3ee'];
+  if(revType==='bar'){
+    CH.revSrc=new Chart(document.getElementById('cRevSrc'),{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:colors.map(c=>c+'bb'),borderColor:colors,borderWidth:1.5,borderRadius:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...mkTT(),callbacks:{label:c=>c.raw.toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+  } else {
+    CH.revSrc=new Chart(document.getElementById('cRevSrc'),{type:revType,data:{labels,datasets:[{data:vals,backgroundColor:colors.map(c=>c+'cc'),borderColor:THEME==='dark'?'transparent':'#fff',borderWidth:THEME==='dark'?0:2,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:p.text},position:'bottom'},tooltip:{...mkTT(),callbacks:{label:c=>c.label+': '+c.raw.toLocaleString()+' KD ('+(c.raw/D.mRev*100).toFixed(1)+'%)'}}}}});
+  }
+}
+function switchRev(t,btn){revType=t;document.querySelectorAll('#tab-revenue .tg .tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildRevSrc();}
+
+function buildRevVsExp(){
+  if(CH.revVsExp)CH.revVsExp.destroy();
+  const p=palette(),la=LANG==='ar';
+  const labels=la?['الإيرادات','تكاليف التشغيل','المصاريف الإدارية','الاستهلاك','إجمالي التكاليف']:['Revenue','Op. Cost','G&A Expenses','Depreciation','Total Costs'];
+  CH.revVsExp=new Chart(document.getElementById('cRevVsExp'),{type:'bar',data:{labels,datasets:[{
+    data:[D.mRev,D.mOpCost,D.mGA,D.mDep,D.mOpCost+D.mGA+D.mDep],
+    backgroundColor:[p.green+'bb',p.amber+'66',p.red+'bb',p.muted+'77',p.red+'44'],
+    borderColor:[p.green,p.amber,p.red,p.muted,p.red],
+    borderWidth:1.5,borderRadius:5
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...mkTT(),callbacks:{label:c=>c.raw.toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+}
+
+let expType='bar',expVis=D.eVals.map(()=>true);
+function buildChips(){
+  const c=document.getElementById('expChips');c.innerHTML='';
+  const colors=eClr();
+  eL().forEach((lbl,i)=>{
+    const chip=document.createElement('div');
+    chip.className='chip'+(expVis[i]?'':' off');
+    chip.style.background=expVis[i]?colors[i]+(THEME==='dark'?'22':'18'):'transparent';
+    chip.style.borderColor=expVis[i]?colors[i]:var_border();
+    chip.style.color=expVis[i]?colors[i]:THEME==='dark'?'#64748b':'#94a3b8';
+    chip.textContent=lbl;
+    chip.onclick=()=>{expVis[i]=!expVis[i];buildChips();buildExp();};
+    c.appendChild(chip);
+  });
+}
+function var_border(){return THEME==='dark'?'#1e2d45':'#d1d9e6';}
+
+function buildExp(){
+  if(CH.exp)CH.exp.destroy();
+  const p=palette();
+  const colors=eClr();
+  const vis=eL().map((l,i)=>({l,v:D.eVals[i],c:colors[i]})).filter((_,i)=>expVis[i]&&D.eVals[i]>0);
+  const labels=vis.map(x=>x.l),vals=vis.map(x=>x.v),clrs=vis.map(x=>x.c);
+  if(expType==='pie'){
+    CH.exp=new Chart(document.getElementById('cExp'),{type:'doughnut',data:{labels,datasets:[{data:vals,backgroundColor:clrs.map(c=>c+'cc'),borderColor:THEME==='dark'?'transparent':'#fff',borderWidth:THEME==='dark'?0:2,hoverOffset:6}]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:p.text},position:'bottom'},tooltip:{...mkTT(),callbacks:{label:c=>c.label+': '+c.raw.toLocaleString()+' KD ('+(c.raw/D.mGA*100).toFixed(1)+'%)'}}}}});
+  } else {
+    CH.exp=new Chart(document.getElementById('cExp'),{type:'bar',data:{labels,datasets:[{data:vals,backgroundColor:clrs.map(c=>c+'99'),borderColor:clrs,borderWidth:1.5,borderRadius:4}]},options:{responsive:true,maintainAspectRatio:false,indexAxis:expType==='hbar'?'y':'x',plugins:{legend:{display:false},tooltip:{...mkTT(),callbacks:{label:c=>c.raw.toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text},beginAtZero:true}}}});
+  }
+}
+function switchExp(t,btn){expType=t;document.querySelectorAll('#tab-expenses .tg .tb').forEach(b=>b.classList.remove('active'));btn.classList.add('active');buildExp();}
+
+function buildBS(){
+  if(CH.bs)CH.bs.destroy();
+  const p=palette(),la=LANG==='ar';
+  const labels=la?['أصول متداولة','أصول ثابتة','إجمالي الأصول','ذمم دائنة','رأس المال','حقوق الملكية']:['Current Assets','Fixed Assets','Total Assets','Payables','Capital','Equity'];
+  CH.bs=new Chart(document.getElementById('cBS'),{type:'bar',data:{labels,datasets:[{
+    data:[3899,36369,40268,4106,500000,497390],
+    backgroundColor:[p.purple+'bb',p.purple+'66',p.purple+'dd',p.red+'bb',p.green+'66',p.green+'bb'],
+    borderColor:[p.purple,p.purple,p.purple,p.red,p.green,p.green],
+    borderWidth:1.5,borderRadius:5
+  }]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{...mkTT(),callbacks:{label:c=>c.raw.toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+}
+
+function buildBreakEven(){
+  if(CH.breakeven)CH.breakeven.destroy();
+  const p=palette(),la=LANG==='ar';
+  const days=Array.from({length:32},(_,i)=>i+50);
+  const totalFixed=D.mGA+D.mDep;
+  CH.breakeven=new Chart(document.getElementById('cBreakEven'),{type:'line',data:{
+    labels:days.map(d=>d+' KD'),
+    datasets:[
+      {label:la?'الإيرادات الشهرية':'Monthly Revenue',data:days.map(d=>d*26),borderColor:p.green,backgroundColor:p.green+'10',fill:true,tension:0.1,pointRadius:0,borderWidth:2},
+      {label:la?'إجمالي التكاليف الثابتة':'Total Fixed Costs',data:days.map(()=>totalFixed),borderColor:p.red,backgroundColor:p.red+'10',fill:false,tension:0,pointRadius:0,borderWidth:2,borderDash:[6,3]}
+    ]},options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{labels:{color:p.text}},tooltip:{...mkTT(),callbacks:{label:c=>c.dataset.label+': '+Math.round(c.raw).toLocaleString()+' KD'}}},scales:{x:{grid:mkGR(),ticks:{color:p.text,maxTicksLimit:10},title:{display:true,text:la?'المبيعات اليومية (KD)':'Daily Sales (KD)',color:p.muted}},y:{grid:mkGR(),ticks:{color:p.text,callback:v=>v.toLocaleString()+' KD'},beginAtZero:true}}}});
+}
+
+function runSim(){
+  const days=+document.getElementById('sDays').value,daily=+document.getElementById('sDaily').value;
+  const gaChg=+document.getElementById('sGA').value,costPct=+document.getElementById('sCost').value;
+  document.getElementById('vDays').textContent=days;
+  document.getElementById('vDaily').textContent=daily+' KD';
+  document.getElementById('vGA').textContent=(gaChg>=0?'+':'')+gaChg+'%';
+  document.getElementById('vCost').textContent=costPct+'%';
+  const rev=days*daily,opCost=rev*costPct/100,gp=rev-opCost,ga=D.mGA*(1+gaChg/100),net=gp-ga-D.mDep;
+  const p=palette();
+  document.getElementById('oRev').textContent=kd(rev);
+  document.getElementById('oGP').textContent=kd(gp);
+  document.getElementById('oGA').textContent=kd(ga);
+  document.getElementById('oNet').textContent=kd(net);
+  document.getElementById('oNet').style.color=net>=0?p.green:p.red;
+  document.getElementById('oNetBox').className='sim-box sim-net'+(net<0?' sim-net-loss':'');
+}
+
+// ════════════════════════════════════════════════
+// TABS
+// ════════════════════════════════════════════════
+function showTab(id,btn){
+  document.querySelectorAll('.section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
+  document.getElementById('tab-'+id).classList.add('active');
+  if(btn)btn.classList.add('active');
+  if(!TI[id]){
+    TI[id]=true;
+    if(id==='pl'){buildPLTable();buildPLChart();}
+    if(id==='revenue'){buildRevSrc();buildRevVsExp();}
+    if(id==='expenses'){buildChips();buildExp();}
+    if(id==='cashflow'){buildBS();}
+    if(id==='simulator'){buildBreakEven();runSim();}
+  }
+}
+
+// ════════════════════════════════════════════════
+// BOOT
+// ════════════════════════════════════════════════
+window.addEventListener('load',()=>{
+  document.querySelectorAll('[data-ar]').forEach(el=>{
+    if(el.tagName==='INPUT'||el.tagName==='CANVAS')return;
+    el.textContent=el.getAttribute('data-ar');
+  });
+  TI.overview=true;
+  buildPerf();
+  buildGap();
+  runSim();
+});
+</script>
+</body>
+</html>
